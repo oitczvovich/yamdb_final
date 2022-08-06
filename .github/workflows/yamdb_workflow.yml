@@ -1,27 +1,36 @@
-name: Yamdb_workflow
+name: Django-app workflow
 
 on: [push]
 
 jobs:
   tests:
+    # «Раннер» — создание изолированного окружения с последней версией Ubuntu 
     runs-on: ubuntu-latest
 
     steps:
+    # Запуск actions checkout — готового скрипта 
+    # для клонирования репозитория
     - uses: actions/checkout@v2
-
     - name: Set up Python
+      # Запуск actions setup-python — готового скрипта 
+      # для развёртывания окружения Python
       uses: actions/setup-python@v2
       with:
+        # Выбор версии Python
         python-version: 3.7
 
     - name: Install dependencies
       run: | 
+        # обновление pip
         python -m pip install --upgrade pip 
+        # установка flake8 и его плагинов
         pip install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
+        # установка зависимостей
         pip install -r api_yamdb/requirements.txt 
 
     - name: Test with flake8 and django tests
       run: |
+        # запуск проверки проекта по flake8
         python -m flake8
         pytest
 
@@ -30,38 +39,36 @@ jobs:
       runs-on: ubuntu-latest
       needs: tests
       steps:
-
         - name: Check out the repo
-          uses: actions/checkout@v2
-
+          # Проверка доступности репозитория Docker Hub для workflow
+          uses: actions/checkout@v2 
         - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v1
-
-        - name: Login to Docker
+          # Вызов сборщика контейнеров docker
+          uses: docker/setup-buildx-action@v1 
+        - name: Login to Docker 
+          # Запуск скрипта авторизации на Docker Hub
           uses: docker/login-action@v1 
           with:
             username: ${{ secrets.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_PASSWORD }}
-
         - name: Push to Docker Hub
+          # Пуш образа в Docker Hub 
           uses: docker/build-push-action@v2 
           with:
             push: true
             tags: oitczvovich/infra:v1
-            file: apy_yamdb/Dockerfile
 
   deploy:
       runs-on: ubuntu-latest
       needs: build_and_push_to_docker_hub
       steps:
-
         - name: executing remote ssh commands to deploy
           uses: appleboy/ssh-action@master
           with:
             host: ${{ secrets.HOST }}
             username: ${{ secrets.USER }}
             key: ${{ secrets.SSH_KEY }}
-            # passphrase: ${{ secrets.PASSPHRASE }} если есть PASSPHRASE у SSH
+            passphrase: ${{ secrets.PASSPHRASE }}
             script: |
               sudo docker-compose stop
               sudo docker-compose rm web
@@ -72,14 +79,12 @@ jobs:
               echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
               echo DB_HOST=${{ secrets.DB_HOST }} >> .env
               echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-              echo SECRET_KEY=${{ secrets.SECRET_KEY}} >> .env
+              echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
               sudo docker-compose up -d
-
   send_message:
     runs-on: ubuntu-latest
     needs: deploy
     steps:
-    
     - name: send message
       uses: appleboy/telegram-action@master
       with:
