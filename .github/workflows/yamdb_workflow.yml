@@ -57,7 +57,6 @@ jobs:
           with:
             push: true
             tags: oitczvovich/infra:v1
-            file: apy_yamdb/Dockerfile
 
   deploy:
       runs-on: ubuntu-latest
