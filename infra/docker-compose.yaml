@@ -8,7 +8,7 @@ services:
     env_file:
       - ./.env
   web:
-    image: oitczvovich/infra_web:latest
+    image: oitczvovich/infra_web:v1
     restart: always
     volumes:
       - static_value:/app/static/
