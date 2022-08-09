@@ -40,7 +40,7 @@ jobs:
           with:
             file: api_yamdb/Dockerfile
             push: true
-            tags: oitczvovich/infra:v1
+            tags: oitczvovich/infra_web:latest
 
 
   deploy:
