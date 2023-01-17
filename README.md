@@ -5,8 +5,7 @@
 ![example workflow](https://github.com/oitczvovich/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 <br><br>
 # YaMDb
-С проектом можно ознакомтиться по ссылке 
-### http://158.160.6.36/redoc/ 
+
 
 ## Описание
 Проект YaMDb собирает отзывы пользователей на произведения.
