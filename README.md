@@ -38,7 +38,7 @@ DB_PORT=5432
 ```
 3. Запуск тестов (опционально, если не нужно - переходите к следующему шагу) Создать и активировать виртуальное пространство, установить зависимости.<br>
 
-Для Windows:
+-Для Windows:
 ```bash
 cd infra_sp2
 python -m venv venv
@@ -48,7 +48,7 @@ pip install -r requirements.txt
 cd ..
 pytest
 ```
-Для Mac/Linux:
+-Для Mac/Linux:
 ```bash
 cd infra_sp2
 python3 -m venv venv
